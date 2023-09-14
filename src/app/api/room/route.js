@@ -3,26 +3,47 @@ import { checkToken } from "@/app/libs/checkToken";
 import { nanoid } from "nanoid";
 import { NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (request) => {
   readDB();
+  const rooms = request.nextUrl.searchParams.get("rooms");
+
+  let filtered = DB.rooms;
+  if (rooms !== null) {
+    filtered = filtered.filter((std) => std.rooms === rooms);
+  }
+
+  writeDB();
+
   return NextResponse.json({
     ok: true,
-    //rooms:
-    //totalRooms:
+    rooms: filtered,
+    totalRooms: `${rooms.length}`,
   });
 };
 
 export const POST = async (request) => {
-  const payload = checkToken();
+  const rawAuthHeader = headers().get("authorization");
+  const token = rawAuthHeader.split(" ")[1];
 
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: "Invalid token",
-  //   },
-  //   { status: 401 }
-  // );
+  role = checkToken;
 
+  readDB();
+  const rooms = request.nextUrl.searchParams.get("rooms");
+
+  let filtered = DB.rooms;
+  if (rooms !== null) {
+    filtered = filtered.filter((std) => std.rooms === rooms);
+  }
+
+  if (found) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Invalid token",
+      },
+      { status: 401 }
+    );
+  }
   readDB();
 
   // return NextResponse.json(
